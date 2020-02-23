@@ -4,14 +4,15 @@ import subprocess
 from distutils.core import setup, Command
 
 
-setup(name='nixops-hetzner',
+setup(name='nixops-digitalocean',
       version='@version@',
-      description='NixOS cloud deployment tool, but for hetzner',
-      url='https://github.com/NixOS/nixops-hetzner',
+      description='NixOS cloud deployment tool, but for digitalocean',
+      url='https://github.com/NixOS/nixops-digitalocean',
       # TODO: add author
       author='',
       author_email='',
-      packages=[ 'nixopshetzner', 'nixopshetzner.backends'],
-      entry_points={'nixops': ['hetzner = nixopshetzner.plugin']},
+      packages=[ 'nixopsdigitalocean', 'nixopsdigitalocean.backends'],
+      package_data={'nixopsdigitalocean': ['data/nixos-infect']},
+      entry_points={'nixops': ['digitalocean = nixopsdigitalocean.plugin']},
       py_modules=['plugin']
 )

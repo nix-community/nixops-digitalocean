@@ -1,9 +1,9 @@
 {
   config_exporters = { optionalAttrs, ... }: [
-    (config: { hetzner = optionalAttrs (config.deployment.targetEnv == "hetzner") config.deployment.hetzner; })
+    (config: { digitalOcean = optionalAttrs (config.deployment.targetEnv == "digitalOcean") config.deployment.digitalOcean; })
   ];
   options = [
-    ./hetzner.nix
+    ./digital-ocean.nix
   ];
   resources = { evalResources, zipAttrs, resourcesByType, ... }: { };
 }

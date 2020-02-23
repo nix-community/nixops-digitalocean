@@ -3,9 +3,9 @@ import nixops.plugins
 
 @nixops.plugins.hookimpl
 def nixexprs():
-    expr_path = os.path.realpath(os.path.dirname(__file__) + "/../../../../share/nix/nixops-hetzner")
+    expr_path = os.path.realpath(os.path.dirname(__file__) + "/../../../../share/nix/nixops-digitalocean")
     if not os.path.exists(expr_path):
-        expr_path = os.path.realpath(os.path.dirname(__file__) + "/../../../../../share/nix/nixops-hetzner")
+        expr_path = os.path.realpath(os.path.dirname(__file__) + "/../../../../../share/nix/nixops-digitalocean")
     if not os.path.exists(expr_path):
         expr_path = os.path.dirname(__file__) + "/../nix"
 
@@ -16,6 +16,6 @@ def nixexprs():
 @nixops.plugins.hookimpl
 def load():
     return [
-        "nixopshetzner.backends.server",
+        "nixopsdigitalocean.backends.digital_ocean",
     ]
 

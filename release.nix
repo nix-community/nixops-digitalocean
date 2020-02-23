@@ -16,7 +16,7 @@ rec {
     with import nixpkgs { inherit system; };
 
     python2Packages.buildPythonApplication rec {
-      name = "nixops-hetzner-${version}";
+      name = "nixops-digitalocean-${version}";
       namePrefix = "";
 
       src = ./.;
@@ -31,7 +31,7 @@ rec {
 
       propagatedBuildInputs = with python2Packages;
         [
-          hetzner
+          digital-ocean
         ];
 
       # For "nix-build --run-env".
@@ -51,8 +51,8 @@ rec {
 
       postInstall =
         ''
-          mkdir -p $out/share/nix/nixops-hetzner
-          cp -av nix/* $out/share/nix/nixops-hetzner
+          mkdir -p $out/share/nix/nixops-digitalocean
+          cp -av nix/* $out/share/nix/nixops-digitalocean
         '';
 
       meta.description = "Nix package for ${stdenv.system}";
