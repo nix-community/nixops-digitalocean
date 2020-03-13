@@ -11,7 +11,7 @@ setup(name='nixops-digitalocean',
       # TODO: add author
       author='',
       author_email='',
-      packages=[ 'nixopsdigitalocean', 'nixopsdigitalocean.backends'],
+      packages=[ 'nixopsdigitalocean', 'nixopsdigitalocean.backends', 'nixopsdigitalocean.resources'],
       package_data={'nixopsdigitalocean': ['data/nixos-infect']},
       entry_points={'nixops': ['digitalocean = nixopsdigitalocean.plugin']},
       py_modules=['plugin']

@@ -28,7 +28,9 @@ import nixops.known_hosts
 import socket
 import digitalocean
 
-infect_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data', 'nixos-infect'))
+infect_path = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "data", "nixos-infect")
+)
 
 
 class DigitalOceanDefinition(MachineDefinition):
@@ -57,7 +59,7 @@ class DigitalOceanState(MachineState):
     default_gateway = nixops.util.attr_property("defaultGateway", None)
     netmask = nixops.util.attr_property("netmask", None)
     enable_ipv6 = nixops.util.attr_property("digitalOcean.enableIpv6", False, bool)
-    public_ipv6 = nixops.util.attr_property("publicIpv6", {}, 'json')
+    public_ipv6 = nixops.util.attr_property("publicIpv6", {}, "json")
     default_gateway6 = nixops.util.attr_property("defaultGateway6", None)
     region = nixops.util.attr_property("digitalOcean.region", None)
     size = nixops.util.attr_property("digitalOcean.size", None)
@@ -75,49 +77,77 @@ class DigitalOceanState(MachineState):
     def get_ssh_flags(self, *args, **kwargs):
         super_flags = super(DigitalOceanState, self).get_ssh_flags(*args, **kwargs)
         return super_flags + [
-            '-o', 'UserKnownHostsFile=/dev/null',
-            '-o', 'StrictHostKeyChecking=accept-new',
-            '-i', self.get_ssh_private_key_file(),
+            "-o",
+            "UserKnownHostsFile=/dev/null",
+            "-o",
+            "StrictHostKeyChecking=accept-new",
+            "-i",
+            self.get_ssh_private_key_file(),
         ]
 
     def get_physical_spec(self):
         def prefix_len(netmask):
-            return bin(int(socket.inet_aton(netmask).encode('hex'), 16)).count('1')
+            return bin(int(socket.inet_aton(netmask).encode("hex"), 16)).count("1")
+
         networking = {
-            'defaultGateway': self.default_gateway,
-            'nameservers': ['8.8.8.8'], # default provided by DO
-            ('interfaces', 'ens3', 'ipv4', 'addresses'): [{"address": self.public_ipv4, 'prefixLength': prefix_len(self.netmask)}],
+            "defaultGateway": self.default_gateway,
+            "nameservers": ["8.8.8.8"],  # default provided by DO
+            ("interfaces", "ens3", "ipv4", "addresses"): [
+                {"address": self.public_ipv4, "prefixLength": prefix_len(self.netmask)}
+            ],
         }
         if self.public_ipv6:
-            networking[('interfaces', 'ens3', 'ipv6', 'addresses')] = [{'address': self.public_ipv6['address'], 'prefixLength': self.public_ipv6['prefixLength']}]
+            networking[("interfaces", "ens3", "ipv6", "addresses")] = [
+                {
+                    "address": self.public_ipv6["address"],
+                    "prefixLength": self.public_ipv6["prefixLength"],
+                }
+            ]
         if self.default_gateway6:
-            networking['defaultGateway6'] = self.default_gateway6
+            networking["defaultGateway6"] = self.default_gateway6
 
-        return Function("{ ... }", {
-            'imports': [ RawValue('<nixpkgs/nixos/modules/profiles/qemu-guest.nix>') ],
-            'networking': networking,
-            ('boot', 'loader', 'grub', 'device'): 'nodev', # keep ubuntu bootloader?
-            ('fileSystems', '/'): { 'device': '/dev/vda1', 'fsType': 'ext4'},
-            ('users', 'extraUsers', 'root', 'openssh', 'authorizedKeys', 'keys'): [self.depl.active_resources.get('ssh-key').public_key],
-        })
+        return Function(
+            "{ ... }",
+            {
+                "imports": [
+                    RawValue("<nixpkgs/nixos/modules/profiles/qemu-guest.nix>")
+                ],
+                "networking": networking,
+                (
+                    "boot",
+                    "loader",
+                    "grub",
+                    "device",
+                ): "nodev",  # keep ubuntu bootloader?
+                ("fileSystems", "/"): {"device": "/dev/vda1", "fsType": "ext4"},
+                ("users", "extraUsers", "root", "openssh", "authorizedKeys", "keys"): [
+                    self.depl.active_resources.get("ssh-key").public_key
+                ],
+            },
+        )
 
     def get_ssh_private_key_file(self):
-        return self.write_ssh_private_key(self.depl.active_resources.get('ssh-key').private_key)
+        return self.write_ssh_private_key(
+            self.depl.active_resources.get("ssh-key").private_key
+        )
 
     def create_after(self, resources, defn):
         # make sure the ssh key exists before we do anything else
         return {
-            r for r in resources if
-            isinstance(r, nixops.resources.ssh_keypair.SSHKeyPairState)
+            r
+            for r in resources
+            if isinstance(r, nixops.resources.ssh_keypair.SSHKeyPairState)
         }
 
     def get_auth_token(self):
-        return os.environ.get('DIGITAL_OCEAN_AUTH_TOKEN', self.auth_token)
+        return os.environ.get("DIGITAL_OCEAN_AUTH_TOKEN", self.auth_token)
 
     def destroy(self, wipe=False):
         self.log("destroying droplet {}".format(self.droplet_id))
         try:
-            droplet = digitalocean.Droplet(id=self.droplet_id, token=self.get_auth_token())
+            droplet = digitalocean.Droplet(
+                id=self.droplet_id, token=self.get_auth_token()
+            )
             droplet.destroy()
         except digitalocean.baseapi.NotFoundError:
             self.log("droplet not found - assuming it's been destroyed already")
@@ -127,9 +157,11 @@ class DigitalOceanState(MachineState):
         return True
 
     def create(self, defn, check, allow_reboot, allow_recreate):
-        ssh_key = self.depl.active_resources.get('ssh-key')
+        ssh_key = self.depl.active_resources.get("ssh-key")
         if ssh_key is None:
-            raise Exception('Please specify a ssh-key resource (resources.sshKeyPairs.ssh-key = {}).')
+            raise Exception(
+                "Please specify a ssh-key resource (resources.sshKeyPairs.ssh-key = {})."
+            )
 
         self.set_common_state(defn)
 
@@ -143,24 +175,24 @@ class DigitalOceanState(MachineState):
             region=defn.region,
             ipv6=defn.enable_ipv6,
             ssh_keys=[ssh_key.public_key],
-            image='ubuntu-16-04-x64', # only for lustration
+            image="ubuntu-16-04-x64",  # only for lustration
             size_slug=defn.size,
         )
 
         self.log_start("creating droplet ...")
         droplet.create()
 
-        status = 'in-progress'
-        while status == 'in-progress':
+        status = "in-progress"
+        while status == "in-progress":
             actions = droplet.get_actions()
             for action in actions:
                 action.load()
-                if action.status != 'in-progress':
+                if action.status != "in-progress":
                     status = action.status
             time.sleep(1)
             self.log_continue("[{}] ".format(status))
 
-        if status != 'completed':
+        if status != "completed":
             raise Exception("unexpected status: {}".format(status))
 
         droplet.load()
@@ -170,19 +202,21 @@ class DigitalOceanState(MachineState):
 
         # Not sure when I'd have more than one interface from the DO
         # API but networks is an array nevertheless.
-        self.default_gateway = droplet.networks['v4'][0]['gateway']
-        self.netmask = droplet.networks['v4'][0]['netmask']
+        self.default_gateway = droplet.networks["v4"][0]["gateway"]
+        self.netmask = droplet.networks["v4"][0]["netmask"]
 
         first_ipv6 = {}
         first_gw6 = None
-        if 'v6' in droplet.networks:
-            public_ipv6_networks = [n for n in droplet.networks['v6'] if n['type'] == 'public']
+        if "v6" in droplet.networks:
+            public_ipv6_networks = [
+                n for n in droplet.networks["v6"] if n["type"] == "public"
+            ]
             if len(public_ipv6_networks) > 0:
                 # The DigitalOcean API does not expose an explicit
                 # default interface or gateway, so assume this is it.
-                first_ipv6['address'] = public_ipv6_networks[0]['ip_address']
-                first_ipv6['prefixLength'] = public_ipv6_networks[0]['netmask']
-                first_gw6 = public_ipv6_networks[0]['gateway']
+                first_ipv6["address"] = public_ipv6_networks[0]["ip_address"]
+                first_ipv6["prefixLength"] = public_ipv6_networks[0]["netmask"]
+                first_gw6 = public_ipv6_networks[0]["gateway"]
         self.public_ipv6 = first_ipv6
         self.default_gateway6 = first_gw6
 
@@ -191,16 +225,17 @@ class DigitalOceanState(MachineState):
         # - predictable network interface naming (ens3 etc)
         self.wait_for_ssh()
         self.log_start("running nixos-infect")
-        self.run_command('bash </dev/stdin 2>&1', stdin=open(infect_path))
+        self.run_command("bash </dev/stdin 2>&1", stdin=open(infect_path))
         self.reboot_sync()
 
     def reboot(self, hard=False):
         if hard:
             self.log("sending hard reset to droplet...")
-            droplet = digitalocean.Droplet(id=self.droplet_id, token=self.get_auth_token())
+            droplet = digitalocean.Droplet(
+                id=self.droplet_id, token=self.get_auth_token()
+            )
             droplet.reboot()
             self.wait_for_ssh()
             self.state = self.STARTING
         else:
             MachineState.reboot(self, hard=hard)
-

@@ -1,7 +1,6 @@
 { config, lib, ... }:
 
 with lib;
-
 let
   cfg = config.deployment.digitalOcean;
 in
@@ -11,7 +10,8 @@ in
 
     deployment.digitalOcean.authToken = mkOption {
       default = "";
-      example = "8b2f4e96af3997853bfd4cd8998958eab871d9614e35d63fab45a5ddf981c4da";
+      example =
+        "8b2f4e96af3997853bfd4cd8998958eab871d9614e35d63fab45a5ddf981c4da";
       type = types.str;
       description = ''
         The API auth token. We're checking the environment for

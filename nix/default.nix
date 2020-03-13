@@ -5,5 +5,7 @@
   options = [
     ./digital-ocean.nix
   ];
-  resources = { evalResources, zipAttrs, resourcesByType, ... }: { };
+  resources = { evalResources, zipAttrs, resourcesByType, ... }: {
+    doVolumes = evalResources ./volume.nix (zipAttrs resourcesByType.doVolumes or []);
+  };
 }
