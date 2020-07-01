@@ -5,10 +5,12 @@
 
 import os
 import os.path
+
 import nixops.resources
 import nixops.util
 import nixops.known_hosts
-import digitalocean
+
+import digitalocean # type: ignore
 
 
 class DOVolumeDefinition(nixops.resources.ResourceDefinition):

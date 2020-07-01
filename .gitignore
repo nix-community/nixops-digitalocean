@@ -9,3 +9,5 @@ result
 *.sw[a-z]
 tags
 tests/test.nixops*
+nixops_digitalocean.egg-info*
+.mypy_cache*
