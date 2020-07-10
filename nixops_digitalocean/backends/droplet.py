@@ -30,6 +30,7 @@ from nixops.deployment import Deployment
 from nixops.nix_expr import Function, RawValue
 from nixops.util import attr_property
 from nixops.state import RecordId
+import codecs
 
 import digitalocean # type: ignore
 
@@ -114,7 +115,7 @@ class DropletState(MachineState):
 
     def get_physical_spec(self) -> Function:
         def prefix_len(netmask):
-            return bin(int(socket.inet_aton(netmask).encode("hex"), 16)).count("1")
+            return bin(int(codecs.encode(socket.inet_aton(netmask), "hex"), 16)).count("1")
 
         networking = {
             "defaultGateway": self.default_gateway,
