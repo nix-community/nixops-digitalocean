@@ -142,7 +142,7 @@ typeguard = "^2.7.1"
 typing-extensions = "^3.7.4"
 
 [package.source]
-reference = "b743ad96dcf81122e68059835c23e51410006033"
+reference = "62875f5e0a054e396e5a8fe7c95545a628408fd1"
 type = "git"
 url = "https://github.com/NixOS/nixops.git"
 [[package]]
