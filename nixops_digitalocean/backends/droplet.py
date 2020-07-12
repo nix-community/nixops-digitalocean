@@ -20,62 +20,89 @@ Still to do:
 import os
 import os.path
 import time
-import nixops.resources
-from nixops.backends import MachineDefinition, MachineState
-from nixops.nix_expr import Function, RawValue
-import nixops.util
-import nixops.known_hosts
 import socket
-import digitalocean
+from typing import Optional, List, Set
 
-infect_path = os.path.abspath(
+from nixops.resources import ResourceEval, ResourceOptions, ssh_keypair
+import nixops.known_hosts
+from nixops.backends import MachineDefinition, MachineOptions, MachineState
+from nixops.deployment import Deployment
+from nixops.nix_expr import Function, RawValue
+from nixops.util import attr_property
+from nixops.state import RecordId
+
+import digitalocean # type: ignore
+
+infect_path: str = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "data", "nixos-infect")
 )
 
 
-class DigitalOceanDefinition(MachineDefinition):
+class DropletOptions(ResourceOptions):
+    auth_token: Optional[str]
+    region: Optional[str]
+    size: Optional[str]
+    enable_ipv6: Optional[bool]
+
+
+class DropletDeploymentOptions(MachineOptions):
+    droplet: DropletOptions
+
+
+class DropletDefinition(MachineDefinition):
     @classmethod
-    def get_type(cls):
-        return "digitalOcean"
+    def get_type(cls) -> str:
+        return "droplet"
 
-    def __init__(self, xml, config):
-        MachineDefinition.__init__(self, xml, config)
-        self.auth_token = config["digitalOcean"]["authToken"]
-        self.region = config["digitalOcean"]["region"]
-        self.size = config["digitalOcean"]["size"]
-        self.enable_ipv6 = config["digitalOcean"]["enableIpv6"]
+    config: DropletDeploymentOptions
 
-    def show_type(self):
+    auth_token: Optional[str]
+    region: Optional[str]
+    size: Optional[str]
+    enable_ipv6: Optional[bool]
+
+    def __init__(self, name: str, config: ResourceEval):
+
+        super().__init__(name, config)
+
+        self.auth_token = self.config.droplet.auth_token
+        self.region = self.config.droplet.region
+        self.size = self.config.droplet.size
+        self.enable_ipv6 = self.config.droplet.enable_ipv6
+
+    def show_type(self) -> str:
         return "{0} [{1}]".format(self.get_type(), self.region)
 
 
-class DigitalOceanState(MachineState):
+class DropletState(MachineState):
     @classmethod
-    def get_type(cls):
-        return "digitalOcean"
+    def get_type(cls) -> str:
+        return "droplet"
 
-    state = nixops.util.attr_property("state", MachineState.MISSING, int)  # override
-    public_ipv4 = nixops.util.attr_property("publicIpv4", None)
-    default_gateway = nixops.util.attr_property("defaultGateway", None)
-    netmask = nixops.util.attr_property("netmask", None)
-    enable_ipv6 = nixops.util.attr_property("digitalOcean.enableIpv6", False, bool)
-    public_ipv6 = nixops.util.attr_property("publicIpv6", {}, "json")
-    default_gateway6 = nixops.util.attr_property("defaultGateway6", None)
-    region = nixops.util.attr_property("digitalOcean.region", None)
-    size = nixops.util.attr_property("digitalOcean.size", None)
-    auth_token = nixops.util.attr_property("digitalOcean.authToken", None)
-    droplet_id = nixops.util.attr_property("digitalOcean.dropletId", None)
-    key_pair = nixops.util.attr_property("digitalOcean.keyPair", None)
+    # generic options
+    #state: int= attr_property("state", MachineState.MISSING, int)  # override
+    public_ipv4: Optional[str] = attr_property("publicIpv4", None)
+    public_ipv6: dict  = attr_property("publicIpv6", {}, "json")
+    default_gateway: Optional[str] = attr_property("defaultGateway", None)
+    netmask: Optional[str] = attr_property("netmask", None)
+    # droplet options
+    enable_ipv6: Optional[bool] = attr_property("droplet.enableIpv6", False, bool)
+    default_gateway6: Optional[str] = attr_property("defaultGateway6", None)
+    region: Optional[str] = attr_property("droplet.region", None)
+    size: Optional[str] = attr_property("droplet.size", None)
+    auth_token: Optional[str] = attr_property("droplet.authToken", None)
+    droplet_id: Optional[str] = attr_property("droplet.dropletId", None)
+    key_pair: Optional[str] = attr_property("droplet.keyPair", None)
 
-    def __init__(self, depl, name, id):
+    def __init__(self, depl: Deployment, name: str, id: RecordId) -> None:
         MachineState.__init__(self, depl, name, id)
-        self.name = name
+        self.name: str = name
 
-    def get_ssh_name(self):
+    def get_ssh_name(self) -> Optional[str]:
         return self.public_ipv4
 
-    def get_ssh_flags(self, *args, **kwargs):
-        super_flags = super(DigitalOceanState, self).get_ssh_flags(*args, **kwargs)
+    def get_ssh_flags(self, *args, **kwargs) -> List[str]:
+        super_flags = super(DropletState, self).get_ssh_flags(*args, **kwargs)
         return super_flags + [
             "-o",
             "UserKnownHostsFile=/dev/null",
@@ -85,7 +112,7 @@ class DigitalOceanState(MachineState):
             self.get_ssh_private_key_file(),
         ]
 
-    def get_physical_spec(self):
+    def get_physical_spec(self) -> Function:
         def prefix_len(netmask):
             return bin(int(socket.inet_aton(netmask).encode("hex"), 16)).count("1")
 
@@ -126,23 +153,23 @@ class DigitalOceanState(MachineState):
             },
         )
 
-    def get_ssh_private_key_file(self):
+    def get_ssh_private_key_file(self) -> str:
         return self.write_ssh_private_key(
             self.depl.active_resources.get("ssh-key").private_key
         )
 
-    def create_after(self, resources, defn):
+    def create_after(self, resources, defn) -> Set:
         # make sure the ssh key exists before we do anything else
         return {
             r
             for r in resources
-            if isinstance(r, nixops.resources.ssh_keypair.SSHKeyPairState)
+            if isinstance(r, ssh_keypair.SSHKeyPairState)
         }
 
-    def get_auth_token(self):
+    def get_auth_token(self) -> Optional[str]:
         return os.environ.get("DIGITAL_OCEAN_AUTH_TOKEN", self.auth_token)
 
-    def destroy(self, wipe=False):
+    def destroy(self, wipe: bool = False) -> bool:
         self.log("destroying droplet {}".format(self.droplet_id))
         try:
             droplet = digitalocean.Droplet(
@@ -156,7 +183,7 @@ class DigitalOceanState(MachineState):
 
         return True
 
-    def create(self, defn, check, allow_reboot, allow_recreate):
+    def create(self, defn, check, allow_reboot: bool, allow_recreate: bool) -> None:
         ssh_key = self.depl.active_resources.get("ssh-key")
         if ssh_key is None:
             raise Exception(
@@ -228,7 +255,7 @@ class DigitalOceanState(MachineState):
         self.run_command("bash </dev/stdin 2>&1", stdin=open(infect_path))
         self.reboot_sync()
 
-    def reboot(self, hard=False):
+    def reboot(self, hard: bool = False) -> None:
         if hard:
             self.log("sending hard reset to droplet...")
             droplet = digitalocean.Droplet(
