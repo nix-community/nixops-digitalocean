@@ -40,10 +40,10 @@ infect_path: str = os.path.abspath(
 
 
 class DropletOptions(ResourceOptions):
-    auth_token: Optional[str]
+    authToken: Optional[str]
     region: Optional[str]
     size: Optional[str]
-    enable_ipv6: Optional[bool]
+    enableIpv6: Optional[bool]
 
 
 class DropletDeploymentOptions(MachineOptions):
@@ -63,13 +63,11 @@ class DropletDefinition(MachineDefinition):
     enable_ipv6: Optional[bool]
 
     def __init__(self, name: str, config: ResourceEval):
-
         super().__init__(name, config)
-
-        self.auth_token = self.config.droplet.auth_token
+        self.auth_token = self.config.droplet.authToken
         self.region = self.config.droplet.region
         self.size = self.config.droplet.size
-        self.enable_ipv6 = self.config.droplet.enable_ipv6
+        self.enable_ipv6 = self.config.droplet.enableIpv6
 
     def show_type(self) -> str:
         return "{0} [{1}]".format(self.get_type(), self.region)
