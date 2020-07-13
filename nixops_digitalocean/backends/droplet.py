@@ -73,7 +73,7 @@ class DropletDefinition(MachineDefinition):
         return "{0} [{1}]".format(self.get_type(), self.region)
 
 
-class DropletState(MachineState):
+class DropletState(MachineState[DropletDefinition]):
     @classmethod
     def get_type(cls) -> str:
         return "droplet"
