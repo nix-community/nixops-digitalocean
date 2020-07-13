@@ -6,6 +6,5 @@
     ./droplet.nix
   ];
   resources = { evalResources, zipAttrs, resourcesByType, ... }: {
-    doVolumes = evalResources ./volume.nix (zipAttrs resourcesByType.doVolumes or []);
   };
 }
