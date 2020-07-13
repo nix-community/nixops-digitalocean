@@ -64,7 +64,7 @@ class DropletDefinition(MachineDefinition):
 
     def __init__(self, name: str, config: ResourceEval):
         super().__init__(name, config)
-        self.auth_token = self.config.droplet.authToken
+        self.auth_token = self.config.droplet.authToken.strip()
         self.region = self.config.droplet.region
         self.size = self.config.droplet.size
         self.enable_ipv6 = self.config.droplet.enableIpv6
@@ -164,6 +164,10 @@ class DropletState(MachineState[DropletDefinition]):
             for r in resources
             if isinstance(r, ssh_keypair.SSHKeyPairState)
         }
+
+    def set_common_state(self, defn: DropletDefinition) -> None:
+        super().set_common_state(defn)
+        self.auth_token = defn.auth_token
 
     def get_auth_token(self) -> Optional[str]:
         return os.environ.get("DIGITAL_OCEAN_AUTH_TOKEN", self.auth_token)
