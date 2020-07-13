@@ -3,7 +3,6 @@ import nixops.plugins
 
 
 class NixopsDigitalOceanPlugin(nixops.plugins.Plugin):
-
     @staticmethod
     def nixexprs():
         return [os.path.dirname(os.path.abspath(__file__)) + "/nix"]

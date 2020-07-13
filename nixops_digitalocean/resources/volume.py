@@ -10,7 +10,7 @@ import nixops.resources
 import nixops.util
 import nixops.known_hosts
 
-import digitalocean # type: ignore
+import digitalocean  # type: ignore
 
 
 class DOVolumeDefinition(nixops.resources.ResourceDefinition):

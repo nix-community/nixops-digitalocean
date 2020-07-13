@@ -32,7 +32,7 @@ from nixops.util import attr_property
 from nixops.state import RecordId
 import codecs
 
-import digitalocean # type: ignore
+import digitalocean  # type: ignore
 
 infect_path: str = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "data", "nixos-infect")
@@ -84,9 +84,9 @@ class DropletState(MachineState[DropletDefinition]):
         return "droplet"
 
     # generic options
-    #state: int= attr_property("state", MachineState.MISSING, int)  # override
+    # state: int= attr_property("state", MachineState.MISSING, int)  # override
     public_ipv4: Optional[str] = attr_property("publicIpv4", None)
-    public_ipv6: dict  = attr_property("publicIpv6", {}, "json")
+    public_ipv6: dict = attr_property("publicIpv6", {}, "json")
     default_gateway: Optional[str] = attr_property("defaultGateway", None)
     netmask: Optional[str] = attr_property("netmask", None)
     # droplet options
@@ -118,7 +118,9 @@ class DropletState(MachineState[DropletDefinition]):
 
     def get_physical_spec(self) -> Function:
         def prefix_len(netmask):
-            return bin(int(codecs.encode(socket.inet_aton(netmask), "hex"), 16)).count("1")
+            return bin(int(codecs.encode(socket.inet_aton(netmask), "hex"), 16)).count(
+                "1"
+            )
 
         networking = {
             "defaultGateway": self.default_gateway,
@@ -158,20 +160,14 @@ class DropletState(MachineState[DropletDefinition]):
         )
 
     def get_ssh_private_key_file(self) -> str:
-        return self.write_ssh_private_key(
-            self.get_ssh_key_resource().private_key
-        )
+        return self.write_ssh_private_key(self.get_ssh_key_resource().private_key)
 
     def get_ssh_key_resource(self) -> ssh_keypair.SSHKeyPairState:
         return cast(ssh_keypair.SSHKeyPairState, self.depl.active_resources["ssh-key"])
 
     def create_after(self, resources, defn) -> Set:
         # make sure the ssh key exists before we do anything else
-        return {
-            r
-            for r in resources
-            if isinstance(r, ssh_keypair.SSHKeyPairState)
-        }
+        return {r for r in resources if isinstance(r, ssh_keypair.SSHKeyPairState)}
 
     def set_common_state(self, defn: DropletDefinition) -> None:
         super().set_common_state(defn)
