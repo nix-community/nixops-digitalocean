@@ -64,7 +64,12 @@ class DropletDefinition(MachineDefinition):
 
     def __init__(self, name: str, config: ResourceEval):
         super().__init__(name, config)
-        self.auth_token = self.config.droplet.authToken.strip()
+
+        if self.config.droplet.authToken:
+            self.auth_token = self.config.droplet.authToken.strip()
+        else:
+            self.auth_token = None
+
         self.region = self.config.droplet.region
         self.size = self.config.droplet.size
         self.enable_ipv6 = self.config.droplet.enableIpv6
