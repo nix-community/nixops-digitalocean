@@ -21,7 +21,7 @@ import os
 import os.path
 import time
 import socket
-from typing import Optional, List, Set
+from typing import Optional, List, Set, cast
 
 from nixops.resources import ResourceEval, ResourceOptions, ssh_keypair
 import nixops.known_hosts
@@ -152,15 +152,18 @@ class DropletState(MachineState[DropletDefinition]):
                 ): "nodev",  # keep ubuntu bootloader?
                 ("fileSystems", "/"): {"device": "/dev/vda1", "fsType": "ext4"},
                 ("users", "extraUsers", "root", "openssh", "authorizedKeys", "keys"): [
-                    self.depl.active_resources.get("ssh-key").public_key
+                    self.get_ssh_key_resource().public_key
                 ],
             },
         )
 
     def get_ssh_private_key_file(self) -> str:
         return self.write_ssh_private_key(
-            self.depl.active_resources.get("ssh-key").private_key
+            self.get_ssh_key_resource().private_key
         )
+
+    def get_ssh_key_resource(self) -> ssh_keypair.SSHKeyPairState:
+        return cast(ssh_keypair.SSHKeyPairState, self.depl.active_resources["ssh-key"])
 
     def create_after(self, resources, defn) -> Set:
         # make sure the ssh key exists before we do anything else
@@ -192,8 +195,9 @@ class DropletState(MachineState[DropletDefinition]):
         return True
 
     def create(self, defn, check, allow_reboot: bool, allow_recreate: bool) -> None:
-        ssh_key = self.depl.active_resources.get("ssh-key")
-        if ssh_key is None:
+        try:
+            ssh_key = self.get_ssh_key_resource()
+        except KeyError:
             raise Exception(
                 "Please specify a ssh-key resource (resources.sshKeyPairs.ssh-key = {})."
             )
