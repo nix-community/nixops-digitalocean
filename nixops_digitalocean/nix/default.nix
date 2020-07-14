@@ -1,6 +1,6 @@
 {
   config_exporters = { optionalAttrs, ... }: [
-    (config: { droplet = optionalAttrs (config.deployment.targetEnv == "droplet") config.deployment.droplet; })
+    (config: { doDroplet = optionalAttrs (config.deployment.targetEnv == "doDroplet") config.deployment.doDroplet; })
   ];
   options = [
     ./droplet.nix

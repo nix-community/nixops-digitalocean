@@ -2,12 +2,12 @@
 
 with lib;
 let
-  cfg = config.deployment.droplet;
+  cfg = config.deployment.doDroplet;
 in
 {
   options = {
 
-    deployment.droplet.authToken = mkOption {
+    deployment.doDroplet.authToken = mkOption {
       default = "";
       example =
         "8b2f4e96af3997853bfd4cd8998958eab871d9614e35d63fab45a5ddf981c4da";
@@ -19,7 +19,7 @@ in
       '';
     };
 
-    deployment.droplet.region = mkOption {
+    deployment.doDroplet.region = mkOption {
       default = "";
       example = "nyc3";
       type = types.str;
@@ -29,7 +29,7 @@ in
       '';
     };
 
-    deployment.droplet.size = mkOption {
+    deployment.doDroplet.size = mkOption {
       example = "512mb";
       type = types.str;
       description = ''
@@ -39,16 +39,16 @@ in
       '';
     };
 
-    deployment.droplet.enableIpv6 = mkOption {
+    deployment.doDroplet.enableIpv6 = mkOption {
       default = false;
       type = types.bool;
       description = ''
-        Whether to enable IPv6 support on the droplet.
+        Whether to enable IPv6 support on the doDroplet.
       '';
     };
   };
 
-  config = mkIf (config.deployment.targetEnv == "droplet") {
+  config = mkIf (config.deployment.targetEnv == "doDroplet") {
     nixpkgs.system = mkOverride 900 "x86_64-linux";
     services.openssh.enable = true;
   };

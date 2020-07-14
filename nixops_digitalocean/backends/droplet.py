@@ -47,13 +47,13 @@ class DropletOptions(ResourceOptions):
 
 
 class DropletDeploymentOptions(MachineOptions):
-    droplet: DropletOptions
+    doDroplet: DropletOptions
 
 
 class DropletDefinition(MachineDefinition):
     @classmethod
     def get_type(cls) -> str:
-        return "droplet"
+        return "doDroplet"
 
     config: DropletDeploymentOptions
 
@@ -65,14 +65,14 @@ class DropletDefinition(MachineDefinition):
     def __init__(self, name: str, config: ResourceEval):
         super().__init__(name, config)
 
-        if self.config.droplet.authToken:
-            self.auth_token = self.config.droplet.authToken.strip()
+        if self.config.doDroplet.authToken:
+            self.auth_token = self.config.doDroplet.authToken.strip()
         else:
             self.auth_token = None
 
-        self.region = self.config.droplet.region
-        self.size = self.config.droplet.size
-        self.enable_ipv6 = self.config.droplet.enableIpv6
+        self.region = self.config.doDroplet.region
+        self.size = self.config.doDroplet.size
+        self.enable_ipv6 = self.config.doDroplet.enableIpv6
 
     def show_type(self) -> str:
         return "{0} [{1}]".format(self.get_type(), self.region)
@@ -81,22 +81,21 @@ class DropletDefinition(MachineDefinition):
 class DropletState(MachineState[DropletDefinition]):
     @classmethod
     def get_type(cls) -> str:
-        return "droplet"
+        return "doDroplet"
 
     # generic options
-    # state: int= attr_property("state", MachineState.MISSING, int)  # override
     public_ipv4: Optional[str] = attr_property("publicIpv4", None)
     public_ipv6: dict = attr_property("publicIpv6", {}, "json")
     default_gateway: Optional[str] = attr_property("defaultGateway", None)
+    default_gateway6: Optional[str] = attr_property("defaultGateway6", None)
     netmask: Optional[str] = attr_property("netmask", None)
     # droplet options
-    enable_ipv6: Optional[bool] = attr_property("droplet.enableIpv6", False, bool)
-    default_gateway6: Optional[str] = attr_property("defaultGateway6", None)
-    region: Optional[str] = attr_property("droplet.region", None)
-    size: Optional[str] = attr_property("droplet.size", None)
-    auth_token: Optional[str] = attr_property("droplet.authToken", None)
-    droplet_id: Optional[str] = attr_property("droplet.dropletId", None)
-    key_pair: Optional[str] = attr_property("droplet.keyPair", None)
+    enable_ipv6: Optional[bool] = attr_property("doDroplet.enableIpv6", False, bool)
+    region: Optional[str] = attr_property("doDroplet.region", None)
+    size: Optional[str] = attr_property("doDroplet.size", None)
+    auth_token: Optional[str] = attr_property("doDroplet.authToken", None)
+    droplet_id: Optional[str] = attr_property("doDroplet.dropletId", None)
+    key_pair: Optional[str] = attr_property("doDroplet.keyPair", None)
 
     def __init__(self, depl: Deployment, name: str, id: RecordId) -> None:
         MachineState.__init__(self, depl, name, id)
