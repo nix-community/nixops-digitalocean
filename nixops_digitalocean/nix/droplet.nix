@@ -1,17 +1,16 @@
 { config, lib, ... }:
 
 with lib;
-
 let
-  cfg = config.deployment.digitalOcean;
+  cfg = config.deployment.droplet;
 in
 {
-  ###### interface
   options = {
 
-    deployment.digitalOcean.authToken = mkOption {
+    deployment.droplet.authToken = mkOption {
       default = "";
-      example = "8b2f4e96af3997853bfd4cd8998958eab871d9614e35d63fab45a5ddf981c4da";
+      example =
+        "8b2f4e96af3997853bfd4cd8998958eab871d9614e35d63fab45a5ddf981c4da";
       type = types.str;
       description = ''
         The API auth token. We're checking the environment for
@@ -20,7 +19,7 @@ in
       '';
     };
 
-    deployment.digitalOcean.region = mkOption {
+    deployment.droplet.region = mkOption {
       default = "";
       example = "nyc3";
       type = types.str;
@@ -30,7 +29,7 @@ in
       '';
     };
 
-    deployment.digitalOcean.size = mkOption {
+    deployment.droplet.size = mkOption {
       example = "512mb";
       type = types.str;
       description = ''
@@ -40,7 +39,7 @@ in
       '';
     };
 
-    deployment.digitalOcean.enableIpv6 = mkOption {
+    deployment.droplet.enableIpv6 = mkOption {
       default = false;
       type = types.bool;
       description = ''
@@ -49,7 +48,7 @@ in
     };
   };
 
-  config = mkIf (config.deployment.targetEnv == "digitalOcean") {
+  config = mkIf (config.deployment.targetEnv == "droplet") {
     nixpkgs.system = mkOverride 900 "x86_64-linux";
     services.openssh.enable = true;
   };
