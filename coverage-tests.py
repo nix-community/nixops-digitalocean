@@ -1,5 +1,5 @@
-#! /usr/bin/env python2
-import nose  # type: ignore
+#! /usr/bin/env python3
+import nose
 import sys
 import os
 
