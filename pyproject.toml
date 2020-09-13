@@ -17,6 +17,8 @@ nixops = {git = "https://github.com/NixOS/nixops.git", rev = "master"}
 [tool.poetry.dev-dependencies]
 mypy = "^0.770"
 black = "^19.10b0"
+nose = "^1.3.7"
+coverage = "^5.2.1"
 
 [tool.poetry.plugins."nixops"]
 digitalocean = "nixops_digitalocean.plugin"
