@@ -102,6 +102,9 @@ class DropletState(MachineState[DropletDefinition]):
         MachineState.__init__(self, depl, name, id)
         self.name: str = name
 
+    def _get_droplet(self) -> digitalocean.Droplet:
+        return digitalocean.Droplet(id=self.droplet_id, token=self.get_auth_token())
+
     def get_ssh_name(self) -> Optional[str]:
         return self.public_ipv4
 
@@ -179,9 +182,7 @@ class DropletState(MachineState[DropletDefinition]):
     def destroy(self, wipe: bool = False) -> bool:
         self.log("destroying droplet {}".format(self.droplet_id))
         try:
-            droplet = digitalocean.Droplet(
-                id=self.droplet_id, token=self.get_auth_token()
-            )
+            droplet = self._get_droplet()
             droplet.destroy()
         except digitalocean.baseapi.NotFoundError:
             self.log("droplet not found - assuming it's been destroyed already")
@@ -263,14 +264,71 @@ class DropletState(MachineState[DropletDefinition]):
         self.run_command("bash </dev/stdin 2>&1", stdin=open(infect_path))
         self.reboot_sync()
 
+    def start(self) -> None:
+        if self.state == self.UP:
+            return
+
+        self.log("starting droplet... ")
+        droplet = self._get_droplet()
+        self.state = self.STARTING
+        droplet.reboot()
+
+        if not nixops.util.check_wait(
+            self.check_started, initial=3, max_tries=100, exception=False
+        ):
+            raise Exception(
+                "Droplet '{0}' failed to start. (state is '{1}')".format(
+                    self.droplet_id, droplet.status
+                )
+            )
+
+        self.wait_for_ssh(check=True)
+
+    def check_started(self) -> bool:
+        return self.check_status("active")
+
+    def check_stopped(self) -> bool:
+        return self.check_status("off")
+
+    def check_status(self, status: str) -> bool:
+        droplet = self._get_droplet()
+        droplet.load()
+        self.log_continue("[{0}] ".format(droplet.status))
+        if droplet.status == status:
+            return True
+
+        return False
+
+    def stop(self) -> None:
+        self.log_start("stopping droplet...")
+        droplet = self._get_droplet()
+        droplet.shutdown()
+        self.state = self.STOPPING
+
+        if not nixops.util.check_wait(
+            self.check_stopped, initial=3, max_tries=100, exception=False
+        ):
+            self.log_end("(time out)")
+            self.log_start("forcing power off... ")
+            droplet.power_off()
+            if not nixops.util.check_wait(
+                self.check_stopped, initial=3, max_tries=100, exception=False
+            ):
+                raise Exception(
+                    "Droplet '{0}' failed to stop (state is '{1}')".format(
+                        self.droplet_id, droplet.status
+                    )
+                )
+
+        self.log_end("")
+        self.state = self.STOPPED
+
     def reboot(self, hard: bool = False) -> None:
         if hard:
             self.log("sending hard reset to droplet...")
-            droplet = digitalocean.Droplet(
-                id=self.droplet_id, token=self.get_auth_token()
-            )
+            droplet = self._get_droplet()
             droplet.reboot()
-            self.wait_for_ssh()
             self.state = self.STARTING
+            self.wait_for_ssh()
         else:
             MachineState.reboot(self, hard=hard)
