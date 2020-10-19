@@ -15,6 +15,7 @@ if __name__ == "__main__":
             sys.argv[0],
             "--process-timeout=inf",
             "--processes=%d".format(count),
+            "--all-modules",
             "-e",
             "^coverage-tests\.py$",
         ]
