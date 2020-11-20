@@ -158,12 +158,15 @@ curl -L https://nixos.org/nix/install | sh
 
 source ~/.nix-profile/etc/profile.d/nix.sh
 
-[ -z "$NIX_CHANNEL" ] && NIX_CHANNEL="nixos-19.03"
+[ -z "$NIX_CHANNEL" ] && NIX_CHANNEL="nixos-20.09"
 nix-channel --remove nixpkgs
 nix-channel --add "https://nixos.org/channels/$NIX_CHANNEL" nixos
 nix-channel --update
 
 export NIXOS_CONFIG=/etc/nixos/configuration.nix
+
+export LANGUAGE="C"
+export LC_ALL="C"
 
 nix-env --set \
   -I nixpkgs=$HOME/.nix-defexpr/channels/nixos \
