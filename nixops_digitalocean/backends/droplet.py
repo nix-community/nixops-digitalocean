@@ -127,7 +127,7 @@ class DropletState(MachineState[DropletDefinition]):
 
         networking = {
             "defaultGateway": self.default_gateway,
-            "nameservers": ["8.8.8.8"],  # default provided by DO
+            "nameservers": ["67.207.67.2", "67.207.67.3"],  # default provided by DO
             ("interfaces", "ens3", "ipv4", "addresses"): [
                 {"address": self.public_ipv4, "prefixLength": prefix_len(self.netmask)}
             ],
