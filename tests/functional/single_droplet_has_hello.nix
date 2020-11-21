@@ -1,5 +1,1 @@
-{
-  machine = { pkgs, ... }: {
-    environment.systemPackages = [ pkgs.hello ];
-  };
-}
+{ machine = { pkgs, ... }: { environment.systemPackages = [ pkgs.hello ]; }; }

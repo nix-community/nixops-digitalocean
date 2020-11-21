@@ -1,3 +1,1 @@
-{
-  network.enableRollback = true;
-}
+{ network.enableRollback = true; }

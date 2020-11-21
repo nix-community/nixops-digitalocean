@@ -1,3 +1,1 @@
-{
-  machine.deployment.droplet.enableIpv6 = true;
-}
+{ machine.deployment.droplet.enableIpv6 = true; }

@@ -1,8 +1,7 @@
 { config, lib, ... }:
 
 with lib;
-let
-  cfg = config.deployment.droplet;
+let cfg = config.deployment.droplet;
 in
 {
   options = {

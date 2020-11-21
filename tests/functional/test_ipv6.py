@@ -7,6 +7,7 @@ parent_dir = path.dirname(__file__)
 
 ipv6_spec = "%s/single_droplet_ipv6.nix" % (parent_dir)
 
+
 class TestIpv6(single_droplet_test.SingleDropletTest):
     _multiprocess_can_split_ = True
 

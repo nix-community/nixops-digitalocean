@@ -3,7 +3,7 @@
 A backend for www.digitalocean.com (short as "DO").
 
 This backend uses nixos-infect (which uses nixos LUSTRATE) to infect a
-Ubuntu digitial ocean instance. The setup requires two reboots, one for
+Ubuntu digital ocean instance. The setup requires two reboots, one for
 the infect itself, another after we pushed the nixos image.
 
 I hit a few subtle problems along the way:

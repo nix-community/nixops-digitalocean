@@ -1,6 +1,6 @@
 {
   network.description = "NixOps DigitalOcean Test";
-  resources.sshKeyPairs.ssh-key = {};
+  resources.sshKeyPairs.ssh-key = { };
 
   machine = {
     deployment.targetEnv = "droplet";

@@ -13,7 +13,7 @@ if __name__ == "__main__":
             "--cover-xml-file=coverage.xml",
             "--cover-html",
             "--cover-html-dir=./html",
-            "--cover-package=nixops",
+            "--cover-package=nixops,nixops_digitalocean",
             "--nocapture",
             "-e",
             "^tests\.py$",

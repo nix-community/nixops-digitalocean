@@ -3,22 +3,31 @@ name = "nixops_digitalocean"
 version = "2.0"
 description = "NixOps plugin for Digital Ocean"
 authors = [
-    "Robert Djubek <contact@mostlyabsurd.com>",
-    "Matan Shenhav <m.shenhav@gmail.com>"
+  "Robert Djubek <contact@mostlyabsurd.com>",
+  "Matan Shenhav <m.shenhav@gmail.com>",
 ]
 license = "LGPL-3.0-only"
-include = [ "nixops_digitalocean/nix/*.nix" ]
+include = ["nixops_digitalocean/nix/*.nix"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
 python-digitalocean = "^1.15.0"
-nixops = {git = "https://github.com/NixOS/nixops.git", rev = "master"}
+nixops = { git = "https://github.com/NixOS/nixops.git" }
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.770"
 black = "^19.10b0"
 nose = "^1.3.7"
 coverage = "^5.2.1"
+flake8 = "^3.8.1"
+# For mypy txt report
+lxml = "^4.6.1"
+# for nixops ;_;
+typeguard = "2.9.1"
+
+# docs
+livereload = "^2.6.1"
+sphinx = "^3.0.3"
 
 [tool.poetry.plugins."nixops"]
 digitalocean = "nixops_digitalocean.plugin"
