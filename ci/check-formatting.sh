@@ -1,5 +1,3 @@
-#!/usr/bin/env nix-shell
-# shellcheck shell=bash
-#!nix-shell ../shell.nix -i bash
+#!/usr/bin/env bash
 
 black . --check --diff

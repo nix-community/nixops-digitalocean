@@ -13,6 +13,11 @@ include = ["nixops_digitalocean/nix/*.nix"]
 python = "^3.7"
 python-digitalocean = "^1.15.0"
 nixops = { git = "https://github.com/NixOS/nixops.git" }
+prettytable = "0.7.2"
+pluggy = "^0.13.1"
+# for nixops ;_;
+typeguard = "^2.7.1"
+typing-extensions = "^3.7.4"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.770"
@@ -22,8 +27,6 @@ coverage = "^5.2.1"
 flake8 = "^3.8.1"
 # For mypy txt report
 lxml = "^4.6.1"
-# for nixops ;_;
-typeguard = "2.9.1"
 
 # docs
 livereload = "^2.6.1"

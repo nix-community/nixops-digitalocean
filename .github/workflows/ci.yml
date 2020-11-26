@@ -23,6 +23,9 @@ jobs:
       - name: Nix
         uses: cachix/install-nix-action@v12
         with:
+        #   install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-3.0pre20201007_5257a25/install
+          # extra_nix_config: |
+          #   experimental-features = nix-command flakes
           nix_path: ${{ matrix.nix_path }}
       - uses: cachix/cachix-action@v8
         with:
@@ -32,15 +35,11 @@ jobs:
         run: 'nix-shell --run true'
       - name: Parsing
         run: './ci/check-nix-files.sh'
+      - name: ENVIRONMENTING
+        run: 'nix --version'
+      - name: ENVIRONMENTING1
+        run: 'nix show-config'
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        nix_path: [
-            "nixpkgs=channel:nixos-unstable"
-          , "nixpkgs=channel:nixos-20.09"
-          , "nixpkgs=channel:nixos-20.03"
-        ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -50,6 +49,9 @@ jobs:
       - name: Nix
         uses: cachix/install-nix-action@v12
         with:
+          # install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-3.0pre20201007_5257a25/install
+          # extra_nix_config: |
+          #   experimental-features = nix-command flakes
           nix_path: ${{ matrix.nix_path }}
       - uses: cachix/cachix-action@v8
         with:
@@ -60,14 +62,6 @@ jobs:
       - name: Build
         run: 'nix-build'
   black:
-    strategy:
-      fail-fast: false
-      matrix:
-        nix_path: [
-            "nixpkgs=channel:nixos-unstable"
-          , "nixpkgs=channel:nixos-20.09"
-          , "nixpkgs=channel:nixos-20.03"
-        ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -77,6 +71,9 @@ jobs:
       - name: Nix
         uses: cachix/install-nix-action@v12
         with:
+          # install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-3.0pre20201007_5257a25/install
+          # extra_nix_config: |
+          #   experimental-features = nix-command flakes
           nix_path: ${{ matrix.nix_path }}
       - uses: cachix/cachix-action@v8
         with:
@@ -86,42 +83,7 @@ jobs:
         run: 'nix-shell --run true'
       - name: Black
         run: './ci/check-formatting.sh'
-  nixpkgs-fmt:
-    strategy:
-      fail-fast: false
-      matrix:
-        nix_path: [
-            "nixpkgs=channel:nixos-unstable"
-          , "nixpkgs=channel:nixos-20.09"
-          , "nixpkgs=channel:nixos-20.03"
-        ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Nix
-        uses: cachix/install-nix-action@v12
-        with:
-          nix_path: ${{ matrix.nix_path }}
-      - uses: cachix/cachix-action@v8
-        with:
-          name: nixops-digitalocean
-          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-      - name: Prefetch shell.nix
-        run: 'nix-shell --run true'
-      - name: Nix Format
-        run: './ci/check-nix-formatting.sh'
   mypy:
-    strategy:
-      fail-fast: false
-      matrix:
-        nix_path: [
-            "nixpkgs=channel:nixos-unstable"
-          , "nixpkgs=channel:nixos-20.09"
-          , "nixpkgs=channel:nixos-20.03"
-        ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -131,6 +93,9 @@ jobs:
       - name: Nix
         uses: cachix/install-nix-action@v12
         with:
+          # install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-3.0pre20201007_5257a25/install
+          # extra_nix_config: |
+          #   experimental-features = nix-command flakes
           nix_path: ${{ matrix.nix_path }}
       - uses: cachix/cachix-action@v8
         with:
@@ -141,14 +106,6 @@ jobs:
       - name: Mypy
         run: './ci/check-mypy.sh'
   flake8:
-    strategy:
-      fail-fast: false
-      matrix:
-        nix_path: [
-            "nixpkgs=channel:nixos-unstable"
-          , "nixpkgs=channel:nixos-20.09"
-          , "nixpkgs=channel:nixos-20.03"
-        ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -158,6 +115,9 @@ jobs:
       - name: Nix
         uses: cachix/install-nix-action@v12
         with:
+          # install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-3.0pre20201007_5257a25/install
+          # extra_nix_config: |
+          #   experimental-features = nix-command flakes
           nix_path: ${{ matrix.nix_path }}
       - uses: cachix/cachix-action@v8
         with:
@@ -165,7 +125,7 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
       - name: Prefetch shell.nix
         run: 'nix-shell --run true'
-      - name: Flake8
+      - name: Mypy
         run: './ci/check-flake8.sh'
   mypy-ratchet:
     strategy:
@@ -179,12 +139,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v1
         with:
           fetch-depth: 0
       - name: Nix
         uses: cachix/install-nix-action@v12
         with:
+          # install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-3.0pre20201007_5257a25/install
+          # extra_nix_config: |
+          #   experimental-features = nix-command flakes
           nix_path: ${{ matrix.nix_path }}
       - uses: cachix/cachix-action@v8
         with:
@@ -194,82 +157,45 @@ jobs:
         run: 'nix-shell --run true'
       - name: Mypy Ratchet
         run: './ci/mypy-ratchet.sh'
-  coverage:
-    strategy:
-      fail-fast: false
-      matrix:
-        nix_path: [
-            "nixpkgs=channel:nixos-unstable"
-          , "nixpkgs=channel:nixos-20.09"
-          , "nixpkgs=channel:nixos-20.03"
-        ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Nix
-        uses: cachix/install-nix-action@v12
-        with:
-          nix_path: ${{ matrix.nix_path }}
-      - uses: cachix/cachix-action@v8
-        with:
-          name: nixops-digitalocean
-          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-      - name: Prefetch shell.nix
-        run: 'nix-shell --run true'
-      - name: Coverage
-        run: './ci/check-tests.sh'
-  docs:
-    strategy:
-      fail-fast: false
-      matrix:
-        nix_path: [
-            "nixpkgs=channel:nixos-unstable"
-          , "nixpkgs=channel:nixos-20.09"
-          , "nixpkgs=channel:nixos-20.03"
-        ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Nix
-        uses: cachix/install-nix-action@v12
-        with:
-          nix_path: ${{ matrix.nix_path }}
-      - uses: cachix/cachix-action@v8
-        with:
-          name: nixops-digitalocean
-          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-      - name: Prefetch shell.nix
-        run: 'nix-shell --run true'
-      - name: Restructured Text Lint
-        run: './ci/lint-docs.sh'
-  poetry-up-to-date:
-    strategy:
-      fail-fast: false
-      matrix:
-        nix_path: [
-            "nixpkgs=channel:nixos-unstable"
-          , "nixpkgs=channel:nixos-20.09"
-          , "nixpkgs=channel:nixos-20.03"
-        ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Nix
-        uses: cachix/install-nix-action@v12
-        with:
-          nix_path: ${{ matrix.nix_path }}
-      - uses: cachix/cachix-action@v8
-        with:
-          name: nixops-digitalocean
-          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-      - name: Prefetch shell.nix
-        run: 'nix-shell --run true'
-      - name: Poetry Locks Consistent
-        run: './ci/check-poetry.sh'
+  # coverage:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 0
+  #     - name: Nix
+  #       uses: cachix/install-nix-action@v12
+  #     - name: Prefetch shell.nix
+  #       run: 'nix-shell --run true'
+  #     - name: Coverage
+  #       run: './ci/check-tests.sh'
+  # docs:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 0
+  #     - name: Nix
+  #       uses: cachix/install-nix-action@v12
+  #       # To use nixFlake in the next step
+  #     - name: Prefetch shell.nix
+  #       run: 'nix-shell --run true'
+  #     - name: Restructured Text Lint
+  #       run: 'nix-shell --run "nix build .#checks.x86_64-linux.doc --experimental-features \"nix-command flakes\""'
+  #     - name: build
+  #       run: 'nix-build -A docs.x86_64-linux'
+  # poetry-up-to-date:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 0
+  #     - name: Nix
+  #       uses: cachix/install-nix-action@v12
+  #     - name: Prefetch shell.nix
+  #       run: 'nix-shell --run true'
+  #     - name: Poetry Locks Consistent
+  #       run: './ci/check-poetry.sh'
