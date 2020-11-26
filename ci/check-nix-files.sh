@@ -1,5 +1,3 @@
-#!/usr/bin/env nix-shell
-# shellcheck shell=bash
-#!nix-shell ../shell.nix -i bash
+#!/usr/bin/env bash
 
 find . -name "*.nix" -exec nix-instantiate --parse --quiet {} >/dev/null +

@@ -1,6 +1,5 @@
-#!/usr/bin/env nix-shell
-# shellcheck shell=bash
-#!nix-shell ../shell.nix -i bash
+#!/usr/bin/env bash
+
 set -eux
 
 git ls-files | xargs codespell -L keypair,iam,hda
