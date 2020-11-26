@@ -1,11 +1,19 @@
 name: CI
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "**" ]
   pull_request:
     branches: [ "**" ]
 jobs:
   parsing:
+    strategy:
+      fail-fast: false
+      matrix:
+        nix_path: [
+            "nixpkgs=channel:nixos-unstable"
+          , "nixpkgs=channel:nixos-20.09"
+          , "nixpkgs=channel:nixos-20.03"
+        ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -15,7 +23,7 @@ jobs:
       - name: Nix
         uses: cachix/install-nix-action@v12
         with:
-          nix_path: nixpkgs=channel:nixos-unstable
+          nix_path: ${{ matrix.nix_path }}
       - uses: cachix/cachix-action@v8
         with:
           name: nixops-digitalocean
@@ -25,6 +33,14 @@ jobs:
       - name: Parsing
         run: './ci/check-nix-files.sh'
   build:
+    strategy:
+      fail-fast: false
+      matrix:
+        nix_path: [
+            "nixpkgs=channel:nixos-unstable"
+          , "nixpkgs=channel:nixos-20.09"
+          , "nixpkgs=channel:nixos-20.03"
+        ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -34,7 +50,7 @@ jobs:
       - name: Nix
         uses: cachix/install-nix-action@v12
         with:
-          nix_path: nixpkgs=channel:nixos-unstable
+          nix_path: ${{ matrix.nix_path }}
       - uses: cachix/cachix-action@v8
         with:
           name: nixops-digitalocean
@@ -44,6 +60,14 @@ jobs:
       - name: Build
         run: 'nix-build'
   black:
+    strategy:
+      fail-fast: false
+      matrix:
+        nix_path: [
+            "nixpkgs=channel:nixos-unstable"
+          , "nixpkgs=channel:nixos-20.09"
+          , "nixpkgs=channel:nixos-20.03"
+        ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -53,7 +77,7 @@ jobs:
       - name: Nix
         uses: cachix/install-nix-action@v12
         with:
-          nix_path: nixpkgs=channel:nixos-unstable
+          nix_path: ${{ matrix.nix_path }}
       - uses: cachix/cachix-action@v8
         with:
           name: nixops-digitalocean
@@ -63,6 +87,14 @@ jobs:
       - name: Black
         run: './ci/check-formatting.sh'
   nixpkgs-fmt:
+    strategy:
+      fail-fast: false
+      matrix:
+        nix_path: [
+            "nixpkgs=channel:nixos-unstable"
+          , "nixpkgs=channel:nixos-20.09"
+          , "nixpkgs=channel:nixos-20.03"
+        ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -72,7 +104,7 @@ jobs:
       - name: Nix
         uses: cachix/install-nix-action@v12
         with:
-          nix_path: nixpkgs=channel:nixos-unstable
+          nix_path: ${{ matrix.nix_path }}
       - uses: cachix/cachix-action@v8
         with:
           name: nixops-digitalocean
@@ -82,6 +114,14 @@ jobs:
       - name: Nix Format
         run: './ci/check-nix-formatting.sh'
   mypy:
+    strategy:
+      fail-fast: false
+      matrix:
+        nix_path: [
+            "nixpkgs=channel:nixos-unstable"
+          , "nixpkgs=channel:nixos-20.09"
+          , "nixpkgs=channel:nixos-20.03"
+        ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -91,7 +131,7 @@ jobs:
       - name: Nix
         uses: cachix/install-nix-action@v12
         with:
-          nix_path: nixpkgs=channel:nixos-unstable
+          nix_path: ${{ matrix.nix_path }}
       - uses: cachix/cachix-action@v8
         with:
           name: nixops-digitalocean
@@ -101,6 +141,14 @@ jobs:
       - name: Mypy
         run: './ci/check-mypy.sh'
   flake8:
+    strategy:
+      fail-fast: false
+      matrix:
+        nix_path: [
+            "nixpkgs=channel:nixos-unstable"
+          , "nixpkgs=channel:nixos-20.09"
+          , "nixpkgs=channel:nixos-20.03"
+        ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -110,7 +158,7 @@ jobs:
       - name: Nix
         uses: cachix/install-nix-action@v12
         with:
-          nix_path: nixpkgs=channel:nixos-unstable
+          nix_path: ${{ matrix.nix_path }}
       - uses: cachix/cachix-action@v8
         with:
           name: nixops-digitalocean
@@ -120,6 +168,14 @@ jobs:
       - name: Flake8
         run: './ci/check-flake8.sh'
   mypy-ratchet:
+    strategy:
+      fail-fast: false
+      matrix:
+        nix_path: [
+            "nixpkgs=channel:nixos-unstable"
+          , "nixpkgs=channel:nixos-20.09"
+          , "nixpkgs=channel:nixos-20.03"
+        ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -129,7 +185,7 @@ jobs:
       - name: Nix
         uses: cachix/install-nix-action@v12
         with:
-          nix_path: nixpkgs=channel:nixos-unstable
+          nix_path: ${{ matrix.nix_path }}
       - uses: cachix/cachix-action@v8
         with:
           name: nixops-digitalocean
@@ -139,6 +195,14 @@ jobs:
       - name: Mypy Ratchet
         run: './ci/mypy-ratchet.sh'
   coverage:
+    strategy:
+      fail-fast: false
+      matrix:
+        nix_path: [
+            "nixpkgs=channel:nixos-unstable"
+          , "nixpkgs=channel:nixos-20.09"
+          , "nixpkgs=channel:nixos-20.03"
+        ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -148,7 +212,7 @@ jobs:
       - name: Nix
         uses: cachix/install-nix-action@v12
         with:
-          nix_path: nixpkgs=channel:nixos-unstable
+          nix_path: ${{ matrix.nix_path }}
       - uses: cachix/cachix-action@v8
         with:
           name: nixops-digitalocean
@@ -158,6 +222,14 @@ jobs:
       - name: Coverage
         run: './ci/check-tests.sh'
   docs:
+    strategy:
+      fail-fast: false
+      matrix:
+        nix_path: [
+            "nixpkgs=channel:nixos-unstable"
+          , "nixpkgs=channel:nixos-20.09"
+          , "nixpkgs=channel:nixos-20.03"
+        ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -165,7 +237,7 @@ jobs:
       - name: Nix
         uses: cachix/install-nix-action@v12
         with:
-          nix_path: nixpkgs=channel:nixos-unstable
+          nix_path: ${{ matrix.nix_path }}
       - uses: cachix/cachix-action@v8
         with:
           name: nixops-digitalocean
@@ -175,6 +247,14 @@ jobs:
       - name: Restructured Text Lint
         run: './ci/lint-docs.sh'
   poetry-up-to-date:
+    strategy:
+      fail-fast: false
+      matrix:
+        nix_path: [
+            "nixpkgs=channel:nixos-unstable"
+          , "nixpkgs=channel:nixos-20.09"
+          , "nixpkgs=channel:nixos-20.03"
+        ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -184,7 +264,7 @@ jobs:
       - name: Nix
         uses: cachix/install-nix-action@v12
         with:
-          nix_path: nixpkgs=channel:nixos-unstable
+          nix_path: ${{ matrix.nix_path }}
       - uses: cachix/cachix-action@v8
         with:
           name: nixops-digitalocean

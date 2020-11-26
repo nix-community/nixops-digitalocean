@@ -2,8 +2,7 @@
 
 with lib;
 let cfg = config.deployment.droplet;
-in
-{
+in {
   options = {
 
     deployment.droplet.authToken = mkOption {
