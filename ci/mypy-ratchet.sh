@@ -1,5 +1,6 @@
-#!/usr/bin/env bash
-
+#!/usr/bin/env nix-shell
+# shellcheck shell=bash
+#!nix-shell ../shell.nix -i bash
 set -eu
 
 cd "${0%/*}/.."

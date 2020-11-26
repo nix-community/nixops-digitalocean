@@ -31,7 +31,7 @@ jsonpickle = "1.4.1"
 
 # docs
 livereload = "^2.6.1"
-sphinx = "^3.0.3"
+sphinx = "^3.3.1"
 
 [tool.poetry.plugins."nixops"]
 digitalocean = "nixops_digitalocean.plugin"
