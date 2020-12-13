@@ -18,9 +18,12 @@ self: super: {
       propagatedBuildInputs = propagatedBuildInputs
         ++ [ self.setuptools self.wheel self.pip ];
     });
-  zipp = super.zipp.overridePythonAttrs (old: {
-    propagatedBuildInputs = old.propagatedBuildInputs ++ [ self.toml ];
-  });
+  typeguard = super.typeguard.overridePythonAttrs
+    ({ nativeBuildInputs ? [ ], ... }: {
+      format = "pyproject";
+      nativeBuildInputs = nativeBuildInputs ++ [ self.poetry ];
+      propagatedBuildInputs = [ self.setuptools ];
+    });
   mypy = super.mypy.overridePythonAttrs (old: {
     propagatedBuildInputs = old.propagatedBuildInputs
       ++ [ self.lxml self.pip self.setuptools ];
