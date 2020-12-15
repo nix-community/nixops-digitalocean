@@ -63,7 +63,7 @@
 
         nixosOptions = pkgs.nixosOptionsDoc {
           inherit (pkgs.lib.fixMergeModules
-            [ ./nixops_digitalocean/nix/default.nix ] {
+            [ ./nixops_digitalocean/nix/droplet.nix ] {
               inherit pkgs;
               name = "<name>";
               uuid = "<uuid>";
