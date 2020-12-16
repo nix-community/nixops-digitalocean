@@ -216,7 +216,8 @@ jobs:
       - name: Nix
         uses: cachix/install-nix-action@v12
         with:
-          nix_path: ${{ matrix.nix_path }}
+          nix_path: "nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-20.09.tar.gz"
+          # nix_path: ${{ matrix.nix_path }}
       - uses: cachix/cachix-action@v8
         with:
           name: nixops-digitalocean
@@ -225,7 +226,7 @@ jobs:
       - name: Prefetch shell.nix
         run: 'nix-shell --run true'
       - name: Restructured Text Lint
-        run: 'nix-shell --run "nix build .#checks.x86_64-linux.doc --experimental-features \"nix-command flakes\""'
+        run: 'nix-shell --show-trace --run "nix build .#checks.x86_64-linux.doc --experimental-features \"nix-command flakes\""'
         # run: 'nix build .#checks.x86_64-linux.doc --experimental-features "nix-command flakes"'
       - name: build
         run: 'nix-build -A docs.x86_64-linux'
