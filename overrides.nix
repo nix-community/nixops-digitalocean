@@ -10,8 +10,9 @@ self: super: {
       self.prettytable
       self.typeguard
       self.typing-extensions
+
     ];
-    propagatedBuildInputs = [ self.setuptools ];
+    propagatedBuildInputs = [ self.setuptools pkgs.git self.setuptools_scm ];
   });
   sphinx = super.sphinx.overridePythonAttrs
     ({ propagatedBuildInputs ? [ ], ... }: {

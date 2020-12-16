@@ -6,10 +6,18 @@
 
   inputs.utils.url = "github:numtide/flake-utils";
 
-  outputs = { self, nixpkgs, utils }:
+  inputs.poetry2nix-src.url = "github:nix-community/poetry2nix";
+
+  # inputs.nixops.url = "github:NixOS/nixops";
+
+  outputs = { self, nixpkgs, poetry2nix-src, utils }:
     utils.lib.eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs { inherit system; };
+        pkgs = import nixpkgs {
+          inherit system;
+
+          overlays = [ poetry2nix-src.overlay ];
+        };
 
         pythonEnv = (pkgs.poetry2nix.mkPoetryEnv {
           projectDir = ./.;
@@ -25,7 +33,7 @@
           else
               FILES=$(find .)
           fi
-          echo "$FILES" | xargs ${pkgs.codespell}/bin/codespell -L keypair,iam,hda
+          echo "$FILES" | xargs ${pkgs.codespell}/bin/codespell -L keypair,iam,hda,ether
           ${pythonEnv}/bin/sphinx-build -M clean doc/ doc/_build
           ${pythonEnv}/bin/sphinx-build -n doc/ doc/_build
         '';
