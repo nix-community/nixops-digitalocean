@@ -13,8 +13,8 @@ function finish {
 cp ci/run-ratchet.sh $scratch/
 
 head=$(git rev-parse HEAD)
-#base=origin/${GITHUB_BASE_REF:-master}
-base=fix-ci-tests
+base=origin/${GITHUB_BASE_REF:-master}
+#base=fix-ci-tests
 
 git fetch origin
 

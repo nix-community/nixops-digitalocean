@@ -169,7 +169,7 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
       - name: Prefetch shell.nix
         run: 'nix-shell --run true'
-      - name: Mypy
+      - name: Flake8
         run: './ci/check-flake8.sh'
   mypy-ratchet:
     strategy:
@@ -183,7 +183,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
         with:
           fetch-depth: 0
       - name: Nix
@@ -252,16 +252,9 @@ jobs:
       - name: Prefetch shell.nix
         run: 'nix-shell --run true'
       - name: Restructured Text Lint
-        run: 'nix-shell --show-trace --run "nix build .#checks.x86_64-linux.doc --experimental-features \"nix-command flakes\""'
-        # run: 'nix build .#checks.x86_64-linux.doc --experimental-features "nix-command flakes"'
+        run: 'nix-shell --run "nix build .#checks.x86_64-linux.doc --experimental-features \"nix-command flakes\""'
       - name: build
         run: 'nix-build -A docs.x86_64-linux'
-  #     - name: Prefetch shell.nix
-  #       run: 'nix-shell --run true'
-  #     - name: Restructured Text Lint
-  #       run: './ci/lint-docs.sh'
-
-
   poetry-up-to-date:
     strategy:
       fail-fast: false

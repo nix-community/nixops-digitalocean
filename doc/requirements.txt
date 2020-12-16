@@ -176,7 +176,7 @@ mypy==0.770; python_version >= "3.5" \
     --hash=sha256:f91c7ae919bbc3f96cd5e5b2e786b2b108343d1d7972ea130f7de27fdd547cf3 \
     --hash=sha256:3b1fc683fb204c6b4403a1ef23f0b1fac8e4477091585e0c8c54cbdf7d7bb164 \
     --hash=sha256:8a627507ef9b307b46a1fea9513d5c98680ba09591253082b4c48697ba05a4ae
-nixops @ git+https://github.com/NixOS/nixops.git@faed0635d24e93f38046af58fb7715327de28e39 ; python_version >= "3.7" and python_version < "4.0"
+nixops @ git+https://github.com/NixOS/nixops.git@master ; python_version >= "3.7" and python_version < "4.0"
 nose==1.3.7 \
     --hash=sha256:dadcddc0aefbf99eea214e0f1232b94f2fa9bd98fa8353711dacb112bfcbbb2a \
     --hash=sha256:9ff7c6cc443f8c51994b34a667bbcf45afd6d945be7477b52e97516fd17c53ac \
