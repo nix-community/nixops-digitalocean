@@ -21,7 +21,7 @@
 
         pythonEnv = (pkgs.poetry2nix.mkPoetryEnv {
           projectDir = ./.;
-          python = pkgs.python38;
+          python = pkgs.python39;
         });
         linters.doc = pkgs.writers.writeBashBin "lint-docs" ''
           set -eux
