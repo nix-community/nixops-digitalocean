@@ -21,10 +21,10 @@ jobs:
         with:
           fetch-depth: 0
       - name: Nix
-        uses: cachix/install-nix-action@v12
+        uses: cachix/install-nix-action@v14.1
         with:
           nix_path: ${{ matrix.nix_path }}
-      - uses: cachix/cachix-action@v8
+      - uses: cachix/cachix-action@v10
         with:
           name: nixops-digitalocean
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -52,10 +52,10 @@ jobs:
         with:
           fetch-depth: 0
       - name: Nix
-        uses: cachix/install-nix-action@v12
+        uses: cachix/install-nix-action@v14.1
         with:
           nix_path: ${{ matrix.nix_path }}
-      - uses: cachix/cachix-action@v8
+      - uses: cachix/cachix-action@v10
         with:
           name: nixops-digitalocean
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -79,10 +79,10 @@ jobs:
         with:
           fetch-depth: 0
       - name: Nix
-        uses: cachix/install-nix-action@v12
+        uses: cachix/install-nix-action@v14.1
         with:
           nix_path: ${{ matrix.nix_path }}
-      - uses: cachix/cachix-action@v8
+      - uses: cachix/cachix-action@v10
         with:
           name: nixops-digitalocean
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -106,10 +106,10 @@ jobs:
         with:
           fetch-depth: 0
       - name: Nix
-        uses: cachix/install-nix-action@v12
+        uses: cachix/install-nix-action@v14.1
         with:
           nix_path: ${{ matrix.nix_path }}
-      - uses: cachix/cachix-action@v8
+      - uses: cachix/cachix-action@v10
         with:
           name: nixops-digitalocean
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -133,10 +133,10 @@ jobs:
         with:
           fetch-depth: 0
       - name: Nix
-        uses: cachix/install-nix-action@v12
+        uses: cachix/install-nix-action@v14.1
         with:
           nix_path: ${{ matrix.nix_path }}
-      - uses: cachix/cachix-action@v8
+      - uses: cachix/cachix-action@v10
         with:
           name: nixops-digitalocean
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -160,10 +160,10 @@ jobs:
         with:
           fetch-depth: 0
       - name: Nix
-        uses: cachix/install-nix-action@v12
+        uses: cachix/install-nix-action@v14.1
         with:
           nix_path: ${{ matrix.nix_path }}
-      - uses: cachix/cachix-action@v8
+      - uses: cachix/cachix-action@v10
         with:
           name: nixops-digitalocean
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -187,10 +187,10 @@ jobs:
         with:
           fetch-depth: 0
       - name: Nix
-        uses: cachix/install-nix-action@v12
+        uses: cachix/install-nix-action@v14.1
         with:
           nix_path: ${{ matrix.nix_path }}
-      - uses: cachix/cachix-action@v8
+      - uses: cachix/cachix-action@v10
         with:
           name: nixops-digitalocean
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -214,10 +214,10 @@ jobs:
         with:
           fetch-depth: 0
       - name: Nix
-        uses: cachix/install-nix-action@v12
+        uses: cachix/install-nix-action@v14.1
         with:
           nix_path: ${{ matrix.nix_path }}
-      - uses: cachix/cachix-action@v8
+      - uses: cachix/cachix-action@v10
         with:
           name: nixops-digitalocean
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -241,10 +241,10 @@ jobs:
         with:
           fetch-depth: 0
       - name: Nix
-        uses: cachix/install-nix-action@v12
+        uses: cachix/install-nix-action@v14.1
         with:
           nix_path: ${{ matrix.nix_path }}
-      - uses: cachix/cachix-action@v8
+      - uses: cachix/cachix-action@v10
         with:
           name: nixops-digitalocean
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -271,10 +271,10 @@ jobs:
         with:
           fetch-depth: 0
       - name: Nix
-        uses: cachix/install-nix-action@v12
+        uses: cachix/install-nix-action@v14.1
         with:
           nix_path: ${{ matrix.nix_path }}
-      - uses: cachix/cachix-action@v8
+      - uses: cachix/cachix-action@v10
         with:
           name: nixops-digitalocean
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
